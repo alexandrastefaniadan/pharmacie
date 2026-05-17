@@ -93,10 +93,10 @@
       ></textarea>
     </div>
 
-    <label class="field flex items-center gap-2">
-      <p-checkbox formControlName="parapharmacy" [binary]="true" />
-      <span>Parapharmacie</span>
-    </label>
+    <div class="field full parapharmacy-row">
+      <p-checkbox formControlName="parapharmacy" [binary]="true" inputId="parapharmacy" />
+      <label for="parapharmacy">Parapharmacie</label>
+    </div>
   </form>
 
   <ng-template pTemplate="footer">
