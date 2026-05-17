@@ -1,0 +1,21 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Pharmacie Backend" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <module name="backend.main" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="ma.pharmacie.PharmacieApplication" />
+    <option name="ACTIVE_PROFILES" value="dev" />
+    <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+    <option name="ENABLE_LAUNCH_OPTIMIZATION" value="true" />
+    <envs>
+      <env name="DB_URL" value="jdbc:postgresql://localhost:5432/pharmacie" />
+      <env name="DB_USER" value="pharmacie" />
+      <env name="DB_PASSWORD" value="pharmacie" />
+    </envs>
+    <extension name="net.ashald.envfile">
+      <option name="IS_ENABLED" value="false" />
+    </extension>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
+
