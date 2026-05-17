@@ -34,3 +34,11 @@
   color: var(--p-text-muted-color);
 }
 
+.description-cell {
+  max-width: 24rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--p-text-muted-color);
+}
+

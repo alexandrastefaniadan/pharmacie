@@ -38,9 +38,7 @@
       <th style="min-width: 9rem">Âge</th>
       <th style="min-width: 14rem">Indications</th>
       <th style="min-width: 14rem">Classes thérapeutiques</th>
-      <th pSortableColumn="updatedAt" style="min-width: 9rem">
-        Modifié le <p-sortIcon field="updatedAt" />
-      </th>
+      <th style="min-width: 14rem">Description</th>
       <th class="actions-col">Actions</th>
     </tr>
   </ng-template>
@@ -62,7 +60,9 @@
       <td>{{ m.ageGroups | joinLabels }}</td>
       <td>{{ m.indications | joinLabels }}</td>
       <td>{{ m.therapeuticClasses | joinLabels }}</td>
-      <td>{{ m.updatedAt | date: 'dd/MM/yy HH:mm' }}</td>
+      <td class="description-cell" [pTooltip]="m.description || ''" tooltipPosition="top">
+        {{ m.description }}
+      </td>
       <td class="actions-col">
         <p-button
           icon="pi pi-pencil"
