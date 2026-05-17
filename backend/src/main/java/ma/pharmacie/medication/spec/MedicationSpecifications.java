@@ -63,7 +63,8 @@ public final class MedicationSpecifications {
     private static Specification<Medication> ageGroupIn(Set<Integer> ids) {
         if (isEmpty(ids)) return null;
         return (root, cq, cb) -> {
-            Join<Medication, AgeGroup> j = root.join("ageGroup", JoinType.LEFT);
+            if (cq.getResultType() != Long.class) cq.distinct(true);
+            Join<Medication, AgeGroup> j = root.join("ageGroups", JoinType.LEFT);
             return j.get("id").in(ids);
         };
     }

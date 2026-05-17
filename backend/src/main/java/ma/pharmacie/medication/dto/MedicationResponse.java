@@ -17,7 +17,7 @@ public record MedicationResponse(
         String description,
         boolean parapharmacy,
         LookupDto form,
-        LookupDto ageGroup,
+        List<LookupDto> ageGroups,
         List<LookupDto> therapeuticClasses,
         List<LookupDto> indications,
         String barcode,

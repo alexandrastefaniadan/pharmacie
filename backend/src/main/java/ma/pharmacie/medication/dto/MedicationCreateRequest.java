@@ -15,7 +15,7 @@ public record MedicationCreateRequest(
         String description,
         Boolean parapharmacy,
         Integer formId,
-        Integer ageGroupId,
+        Set<Integer> ageGroupIds,
         Set<Integer> therapeuticClassIds,
         Set<Integer> indicationIds,
         @Size(max = 20) String barcode,

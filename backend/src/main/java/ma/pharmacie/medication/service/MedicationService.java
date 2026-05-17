@@ -79,7 +79,7 @@ public class MedicationService {
                 .build();
 
         applyForm(m, req.formId());
-        applyAgeGroup(m, req.ageGroupId());
+        applyAgeGroups(m, req.ageGroupIds());
         applyTherapeuticClasses(m, req.therapeuticClassIds());
         applyIndications(m, req.indicationIds());
 
@@ -108,7 +108,7 @@ public class MedicationService {
         m.setExternalCip(trim(req.externalCip()));
 
         applyForm(m, req.formId());
-        applyAgeGroup(m, req.ageGroupId());
+        applyAgeGroups(m, req.ageGroupIds());
         applyTherapeuticClasses(m, req.therapeuticClassIds());
         applyIndications(m, req.indicationIds());
 
@@ -135,11 +135,16 @@ public class MedicationService {
         m.setForm(form);
     }
 
-    private void applyAgeGroup(Medication m, Integer ageGroupId) {
-        if (ageGroupId == null) { m.setAgeGroup(null); return; }
-        AgeGroup ag = ageGroupRepo.findById(ageGroupId)
-                .orElseThrow(() -> NotFoundException.of("AgeGroup", ageGroupId));
-        m.setAgeGroup(ag);
+    private void applyAgeGroups(Medication m, Set<Integer> ids) {
+        if (ids == null || ids.isEmpty()) {
+            m.getAgeGroups().clear();
+            return;
+        }
+        Set<AgeGroup> loaded = new HashSet<>(ageGroupRepo.findAllById(ids));
+        if (loaded.size() != ids.size()) {
+            throw NotFoundException.of("AgeGroup", ids);
+        }
+        m.setAgeGroups(loaded);
     }
 
     private void applyTherapeuticClasses(Medication m, Set<Integer> ids) {

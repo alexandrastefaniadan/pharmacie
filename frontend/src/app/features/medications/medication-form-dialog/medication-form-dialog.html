@@ -43,11 +43,11 @@
 
     <div class="field">
       <label>Âge</label>
-      <p-select
+      <p-multiSelect
         [options]="lookups.ageGroups()"
         optionLabel="labelFr"
         optionValue="id"
-        formControlName="ageGroupId"
+        formControlName="ageGroupIds"
         placeholder="—"
         [showClear]="true"
         appendTo="body"

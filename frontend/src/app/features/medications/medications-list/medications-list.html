@@ -35,9 +35,7 @@
       <th pSortableColumn="dosage" style="min-width: 7rem">
         Dosage <p-sortIcon field="dosage" />
       </th>
-      <th pSortableColumn="ageGroup.labelFr" style="min-width: 9rem">
-        Âge <p-sortIcon field="ageGroup.labelFr" />
-      </th>
+      <th style="min-width: 9rem">Âge</th>
       <th style="min-width: 14rem">Indications</th>
       <th style="min-width: 14rem">Classes thérapeutiques</th>
       <th pSortableColumn="updatedAt" style="min-width: 9rem">
@@ -61,7 +59,7 @@
         }
       </td>
       <td>{{ m.dosage }}</td>
-      <td>{{ m.ageGroup?.labelFr }}</td>
+      <td>{{ m.ageGroups | joinLabels }}</td>
       <td>{{ m.indications | joinLabels }}</td>
       <td>{{ m.therapeuticClasses | joinLabels }}</td>
       <td>{{ m.updatedAt | date: 'dd/MM/yy HH:mm' }}</td>

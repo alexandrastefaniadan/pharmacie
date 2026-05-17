@@ -59,11 +59,11 @@ class MedicationServiceIntegrationTest {
 
         MedicationResponse syrup = service.create(new MedicationCreateRequest(
                 "Toplexil enfant", "oxomemazine", "1.65 mg/5ml", null,
-                false, syrupId, childId, null, Set.of(coughDry), null, null));
+                false, syrupId, Set.of(childId), null, Set.of(coughDry), null, null));
 
         service.create(new MedicationCreateRequest(
                 "Cicatryl",       "trolamine",   null, null,
-                false, creamId, adultId, null, Set.of(wound), null, null));
+                false, creamId, Set.of(adultId), null, Set.of(wound), null, null));
 
         // 1) filter that should match exactly one (syrup + dry cough + child)
         Page<MedicationResponse> hits = service.search(

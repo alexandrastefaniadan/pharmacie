@@ -77,9 +77,13 @@ public class Medication extends Auditable {
     @JoinColumn(name = "form_id")
     private PharmaceuticalForm form;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "age_group_id")
-    private AgeGroup ageGroup;
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+            name = "medication_age_group",
+            joinColumns = @JoinColumn(name = "medication_id"),
+            inverseJoinColumns = @JoinColumn(name = "age_group_id"))
+    @Builder.Default
+    private Set<AgeGroup> ageGroups = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(

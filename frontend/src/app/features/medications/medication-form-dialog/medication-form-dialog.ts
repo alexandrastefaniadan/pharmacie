@@ -86,7 +86,7 @@ export class MedicationFormDialogComponent implements OnInit {
     description: [''],
     parapharmacy: [false],
     formId: [null as number | null],
-    ageGroupId: [null as number | null],
+    ageGroupIds: [[] as number[]],
     therapeuticClassIds: [[] as number[]],
     indicationIds: [[] as number[]],
   });
@@ -102,7 +102,7 @@ export class MedicationFormDialogComponent implements OnInit {
         description: m.description ?? '',
         parapharmacy: m.parapharmacy,
         formId: m.form?.id ?? null,
-        ageGroupId: m.ageGroup?.id ?? null,
+        ageGroupIds: m.ageGroups.map((a) => a.id),
         therapeuticClassIds: m.therapeuticClasses.map((c) => c.id),
         indicationIds: m.indications.map((i) => i.id),
       });
@@ -120,7 +120,7 @@ export class MedicationFormDialogComponent implements OnInit {
       description: raw.description?.trim() || null,
       parapharmacy: !!raw.parapharmacy,
       formId: raw.formId,
-      ageGroupId: raw.ageGroupId,
+      ageGroupIds: raw.ageGroupIds ?? [],
       therapeuticClassIds: raw.therapeuticClassIds ?? [],
       indicationIds: raw.indicationIds ?? [],
     };

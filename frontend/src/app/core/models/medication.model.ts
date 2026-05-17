@@ -9,7 +9,7 @@ export interface MedicationResponse {
   description: string | null;
   parapharmacy: boolean;
   form: LookupDto | null;
-  ageGroup: LookupDto | null;
+  ageGroups: LookupDto[];
   therapeuticClasses: LookupDto[];
   indications: LookupDto[];
   barcode: string | null;
@@ -28,7 +28,7 @@ export interface MedicationCreateRequest {
   description?: string | null;
   parapharmacy?: boolean;
   formId?: number | null;
-  ageGroupId?: number | null;
+  ageGroupIds?: number[];
   therapeuticClassIds?: number[];
   indicationIds?: number[];
   barcode?: string | null;
