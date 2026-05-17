@@ -21,20 +21,19 @@ import {
 } from '@core/models/medication.model';
 import { Page } from '@core/models/page.model';
 
-import { MedicationFilterComponent } from './medication-filter.component';
-import { MedicationFormDialogComponent } from './medication-form.dialog';
-import { JoinLabelsPipe } from '@shared/pipes/join-labels.pipe';
+import { MedicationFilterComponent } from '../medication-filter/medication-filter';
+import { MedicationFormDialogComponent } from '../medication-form-dialog/medication-form-dialog';
+import { JoinLabelsPipe } from '@shared/pipes/join-labels/join-labels.pipe';
 
 /**
  * Main catalog screen.
  *
  * <p>The table uses PrimeNG's <strong>lazy mode</strong>: the backend always
- * returns one page at a time. Pagination, multi-column sort and the filter
- * panel all feed into a single {@link loadLazy} call that hits
- * {@code GET /api/v1/medications}.
+ * returns one page at a time. Pagination, sort and the filter panel all feed
+ * into a single {@link loadLazy} call that hits {@code GET /api/v1/medications}.
  */
 @Component({
-  selector: 'app-medications-list-page',
+  selector: 'app-medications-list',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
@@ -49,119 +48,8 @@ import { JoinLabelsPipe } from '@shared/pipes/join-labels.pipe';
     MedicationFormDialogComponent,
     JoinLabelsPipe,
   ],
-  template: `
-    <div class="flex items-center justify-between mb-3">
-      <h2 style="margin:0">Catalogue des médicaments</h2>
-      <p-button
-        label="Ajouter"
-        icon="pi pi-plus"
-        (onClick)="openCreate()"
-      />
-    </div>
-
-    <app-medication-filter (filterChange)="onFilterChange($event)" />
-
-    <p-table
-      #dt
-      [value]="rows()"
-      [lazy]="true"
-      (onLazyLoad)="loadLazy($event)"
-      dataKey="id"
-      [paginator]="true"
-      [rows]="pageSize()"
-      [totalRecords]="total()"
-      [rowsPerPageOptions]="[25, 50, 100, 200]"
-      [loading]="loading()"
-      sortMode="single"
-      [showCurrentPageReport]="true"
-      currentPageReportTemplate="{first} – {last} sur {totalRecords}"
-      [scrollable]="true"
-      scrollHeight="flex"
-      stripedRows
-      responsiveLayout="scroll"
-    >
-      <ng-template pTemplate="header">
-        <tr>
-          <th pSortableColumn="name" style="min-width: 14rem">
-            Nom <p-sortIcon field="name" />
-          </th>
-          <th pSortableColumn="form.labelFr" style="min-width: 9rem">
-            Forme <p-sortIcon field="form.labelFr" />
-          </th>
-          <th pSortableColumn="dosage" style="min-width: 7rem">
-            Dosage <p-sortIcon field="dosage" />
-          </th>
-          <th pSortableColumn="ageGroup.labelFr" style="min-width: 9rem">
-            Âge <p-sortIcon field="ageGroup.labelFr" />
-          </th>
-          <th style="min-width: 14rem">Indications</th>
-          <th style="min-width: 14rem">Classes thérapeutiques</th>
-          <th pSortableColumn="updatedAt" style="min-width: 9rem">
-            Modifié le <p-sortIcon field="updatedAt" />
-          </th>
-          <th style="width: 7rem; text-align: right">Actions</th>
-        </tr>
-      </ng-template>
-
-      <ng-template pTemplate="body" let-m>
-        <tr>
-          <td>
-            <div style="font-weight: 500">{{ m.name }}</div>
-            @if (m.inn) {
-              <div class="text-muted" style="font-size: 0.8125rem">{{ m.inn }}</div>
-            }
-          </td>
-          <td>
-            @if (m.form) {
-              <p-tag [value]="m.form.labelFr" severity="info" />
-            }
-          </td>
-          <td>{{ m.dosage }}</td>
-          <td>{{ m.ageGroup?.labelFr }}</td>
-          <td>{{ m.indications | joinLabels }}</td>
-          <td>{{ m.therapeuticClasses | joinLabels }}</td>
-          <td>{{ m.updatedAt | date: 'dd/MM/yy HH:mm' }}</td>
-          <td style="text-align: right; white-space: nowrap">
-            <p-button
-              icon="pi pi-pencil"
-              [text]="true"
-              severity="secondary"
-              pTooltip="Modifier"
-              (onClick)="openEdit(m)"
-            />
-            <p-button
-              icon="pi pi-trash"
-              [text]="true"
-              severity="danger"
-              pTooltip="Supprimer"
-              (onClick)="confirmDelete(m)"
-            />
-          </td>
-        </tr>
-      </ng-template>
-
-      <ng-template pTemplate="emptymessage">
-        <tr>
-          <td colspan="8" style="text-align: center; padding: 2rem">
-            Aucun médicament trouvé.
-          </td>
-        </tr>
-      </ng-template>
-    </p-table>
-
-    @if (showDialog()) {
-      <app-medication-form-dialog
-        [(visible)]="showDialogModel"
-        [medication]="editing()"
-        (saved)="onSaved()"
-      />
-    }
-  `,
-  styles: [
-    `
-      :host { display: block; }
-    `,
-  ],
+  templateUrl: './medications-list.html',
+  styleUrl: './medications-list.scss',
 })
 export class MedicationsListPage {
   private readonly api = inject(MedicationsApi);
@@ -185,7 +73,7 @@ export class MedicationsListPage {
   protected get showDialogModel(): boolean { return this.showDialog(); }
   protected set showDialogModel(v: boolean) { this.showDialog.set(v); }
 
-  /** Called by PrimeNG on first render and every page/sort change. */
+  /** Called by PrimeNG on first render and every page / sort change. */
   loadLazy(event: TableLazyLoadEvent): void {
     const size = event.rows ?? this.pageSize();
     const page = Math.floor((event.first ?? 0) / size);

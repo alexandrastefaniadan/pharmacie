@@ -5,7 +5,9 @@ export const routes: Routes = [
   {
     path: 'medications',
     loadComponent: () =>
-      import('@features/medications/medications-list.page').then((m) => m.MedicationsListPage),
+      import('@features/medications/medications-list/medications-list').then(
+        (m) => m.MedicationsListPage,
+      ),
     title: 'Médicaments',
   },
   { path: '**', redirectTo: 'medications' },

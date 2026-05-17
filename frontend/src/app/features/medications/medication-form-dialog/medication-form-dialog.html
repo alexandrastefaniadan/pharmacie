@@ -1,0 +1,113 @@
+<p-dialog
+  [(visible)]="visible"
+  [modal]="true"
+  [closable]="true"
+  [dismissableMask]="false"
+  [style]="{ width: 'min(720px, 95vw)' }"
+  [header]="medication ? 'Modifier le médicament' : 'Nouveau médicament'"
+  (onHide)="onCancel()"
+>
+  <form [formGroup]="form" class="form-grid">
+    <div class="field full">
+      <label>Nom *</label>
+      <input pInputText type="text" formControlName="name" />
+      @if (form.get('name')?.touched && form.get('name')?.invalid) {
+        <small class="text-danger">Le nom est requis (255 caractères max).</small>
+      }
+    </div>
+
+    <div class="field">
+      <label>DCI (substance active)</label>
+      <input pInputText type="text" formControlName="inn" />
+    </div>
+
+    <div class="field">
+      <label>Dosage</label>
+      <input pInputText type="text" formControlName="dosage" placeholder="ex. 500 mg" />
+    </div>
+
+    <div class="field">
+      <label>Forme</label>
+      <p-select
+        [options]="lookups.forms()"
+        optionLabel="labelFr"
+        optionValue="id"
+        formControlName="formId"
+        placeholder="—"
+        [filter]="true"
+        [showClear]="true"
+        appendTo="body"
+        styleClass="w-full"
+      />
+    </div>
+
+    <div class="field">
+      <label>Âge</label>
+      <p-select
+        [options]="lookups.ageGroups()"
+        optionLabel="labelFr"
+        optionValue="id"
+        formControlName="ageGroupId"
+        placeholder="—"
+        [showClear]="true"
+        appendTo="body"
+        styleClass="w-full"
+      />
+    </div>
+
+    <div class="field full">
+      <label>Classes thérapeutiques</label>
+      <p-multiSelect
+        [options]="lookups.therapeuticClasses()"
+        optionLabel="labelFr"
+        optionValue="id"
+        formControlName="therapeuticClassIds"
+        placeholder="—"
+        [filter]="true"
+        appendTo="body"
+        styleClass="w-full"
+      />
+    </div>
+
+    <div class="field full">
+      <label>Indications / usages</label>
+      <p-multiSelect
+        [options]="lookups.indications()"
+        optionLabel="labelFr"
+        optionValue="id"
+        formControlName="indicationIds"
+        placeholder="—"
+        [filter]="true"
+        appendTo="body"
+        styleClass="w-full"
+      />
+    </div>
+
+    <div class="field full">
+      <label>Description</label>
+      <textarea
+        pTextarea
+        rows="3"
+        formControlName="description"
+        placeholder="Notes internes, posologie, contre-indications…"
+      ></textarea>
+    </div>
+
+    <label class="field flex items-center gap-2">
+      <p-checkbox formControlName="parapharmacy" [binary]="true" />
+      <span>Parapharmacie</span>
+    </label>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <p-button label="Annuler" severity="secondary" [text]="true" (onClick)="onCancel()" />
+    <p-button
+      [label]="medication ? 'Enregistrer' : 'Créer'"
+      icon="pi pi-check"
+      [disabled]="form.invalid || saving()"
+      [loading]="saving()"
+      (onClick)="save()"
+    />
+  </ng-template>
+</p-dialog>
+

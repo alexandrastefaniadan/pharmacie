@@ -1,0 +1,82 @@
+<div class="filter-grid">
+  <p-iconField iconPosition="left">
+    <p-inputIcon styleClass="pi pi-search" />
+    <input
+      pInputText
+      type="text"
+      placeholder="Rechercher (nom, DCI)..."
+      [ngModel]="q()"
+      (ngModelChange)="onTextChange($event)"
+      style="width: 100%"
+    />
+  </p-iconField>
+
+  <p-multiSelect
+    [options]="lookups.forms()"
+    optionLabel="labelFr"
+    optionValue="id"
+    [(ngModel)]="formIds"
+    (onChange)="emit()"
+    placeholder="Forme"
+    [filter]="true"
+    [showClear]="true"
+    appendTo="body"
+    styleClass="w-full"
+  />
+
+  <p-multiSelect
+    [options]="lookups.indications()"
+    optionLabel="labelFr"
+    optionValue="id"
+    [(ngModel)]="indicationIds"
+    (onChange)="emit()"
+    placeholder="Indication"
+    [filter]="true"
+    [showClear]="true"
+    appendTo="body"
+    styleClass="w-full"
+  />
+
+  <p-multiSelect
+    [options]="lookups.ageGroups()"
+    optionLabel="labelFr"
+    optionValue="id"
+    [(ngModel)]="ageGroupIds"
+    (onChange)="emit()"
+    placeholder="Âge"
+    [showClear]="true"
+    appendTo="body"
+    styleClass="w-full"
+  />
+
+  <p-multiSelect
+    [options]="lookups.therapeuticClasses()"
+    optionLabel="labelFr"
+    optionValue="id"
+    [(ngModel)]="therapeuticClassIds"
+    (onChange)="emit()"
+    placeholder="Classe thérapeutique"
+    [filter]="true"
+    [showClear]="true"
+    appendTo="body"
+    styleClass="w-full"
+  />
+
+  <label class="flex items-center gap-2">
+    <p-checkbox
+      [(ngModel)]="parapharmacy"
+      [binary]="true"
+      (onChange)="emit()"
+    />
+    <span>Parapharmacie</span>
+  </label>
+
+  <p-button
+    label="Réinitialiser"
+    icon="pi pi-times"
+    severity="secondary"
+    [text]="true"
+    (onClick)="reset()"
+  />
+</div>
+
