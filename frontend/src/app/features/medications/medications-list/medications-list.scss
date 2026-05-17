@@ -42,3 +42,14 @@
   color: var(--p-text-muted-color);
 }
 
+.truncate {
+  max-width: 16rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.muted {
+  color: var(--p-text-muted-color);
+}
+

@@ -36,9 +36,9 @@
         Dosage <p-sortIcon field="dosage" />
       </th>
       <th style="min-width: 9rem">Âge</th>
-      <th style="min-width: 14rem">Indications</th>
-      <th style="min-width: 14rem">Classes thérapeutiques</th>
-      <th style="min-width: 14rem">Description</th>
+      <th style="min-width: 10rem">Indications</th>
+      <th style="min-width: 10rem">Classes thérapeutiques</th>
+      <th style="min-width: 10rem">Description</th>
       <th class="actions-col">Actions</th>
     </tr>
   </ng-template>
@@ -58,9 +58,13 @@
       </td>
       <td>{{ m.dosage }}</td>
       <td>{{ m.ageGroups | joinLabels }}</td>
-      <td>{{ m.indications | joinLabels }}</td>
-      <td>{{ m.therapeuticClasses | joinLabels }}</td>
-      <td class="description-cell" [pTooltip]="m.description || ''" tooltipPosition="top">
+      <td class="truncate" [pTooltip]="(m.indications | joinLabels) || ''" tooltipPosition="top">
+        {{ m.indications | joinLabels }}
+      </td>
+      <td class="truncate" [pTooltip]="(m.therapeuticClasses | joinLabels) || ''" tooltipPosition="top">
+        {{ m.therapeuticClasses | joinLabels }}
+      </td>
+      <td class="truncate muted" [pTooltip]="m.description || ''" tooltipPosition="top">
         {{ m.description }}
       </td>
       <td class="actions-col">
