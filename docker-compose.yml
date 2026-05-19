@@ -45,11 +45,15 @@ services:
       context: ./frontend
     container_name: pharmacie-frontend
     restart: unless-stopped
+    profiles: ["prod"]
     depends_on:
       - backend
+    environment:
+      # Consumed by the nginx template at container startup.
+      BACKEND_URL: http://backend:8080
+      PORT: "80"
     ports:
       - "80:80"
 
 volumes:
   pgdata:
-

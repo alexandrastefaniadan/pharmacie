@@ -1,28 +1,28 @@
-# Nginx config for the production SPA + API proxy.
+# Nginx config template for the production SPA + API proxy.
 #
-# - Serves the Angular static bundle from /usr/share/nginx/html.
-# - Falls back to /index.html on unknown paths so Angular's client-side
-#   router handles deep links (e.g. /categories on first hit).
-# - Proxies /api/* to the Spring Boot backend (service name "backend" in
-#   docker-compose, configurable through $BACKEND_URL on platforms like
-#   Render — change the proxy_pass line then).
-# - Adds the basic security headers we want everywhere.
-
-upstream pharmacie_backend {
-    # Resolved via Docker's internal DNS to the backend container.
-    server backend:8080;
-}
+# This file is consumed by the official nginx image at container start:
+# `envsubst` substitutes ${BACKEND_URL} and ${PORT} from the environment and
+# writes the result to /etc/nginx/conf.d/default.conf.
+#
+# Real nginx variables (e.g. $host, $remote_addr) are NOT touched because they
+# use the bare `$VAR` form, not `${VAR}`.
+#
+# Environment variables expected at runtime:
+#   PORT         port nginx must listen on (Railway sets it dynamically; locally we use 80)
+#   BACKEND_URL  full URL to the Spring Boot backend, e.g.
+#                  - local docker-compose:  http://backend:8080
+#                  - Railway:               https://pharmacie-backend-production.up.railway.app
 
 server {
-    listen       80;
+    listen       ${PORT};
     server_name  _;
 
     # ---- static SPA ----
     root   /usr/share/nginx/html;
     index  index.html;
 
-    # Long cache for fingerprinted assets, no cache for index.html so
-    # users always pick up the latest deploy.
+    # Long cache for fingerprinted assets, no cache for index.html so users
+    # always pick up the latest deploy.
     location / {
         try_files $uri $uri/ /index.html;
         add_header Cache-Control "no-cache" always;
@@ -37,23 +37,25 @@ server {
 
     # ---- API proxy ----
     location /api/ {
-        proxy_pass         http://pharmacie_backend;
+        proxy_pass         ${BACKEND_URL};
         proxy_http_version 1.1;
-        proxy_set_header   Host              $host;
+        proxy_set_header   Host              $proxy_host;
         proxy_set_header   X-Real-IP         $remote_addr;
         proxy_set_header   X-Forwarded-For   $proxy_add_x_forwarded_for;
         proxy_set_header   X-Forwarded-Proto $scheme;
+        proxy_ssl_server_name on;            # needed when BACKEND_URL is https://
         proxy_read_timeout 60s;
     }
 
     # Swagger UI / actuator health — handy when debugging behind nginx.
     location ~ ^/(swagger-ui|v3/api-docs|actuator)/ {
-        proxy_pass         http://pharmacie_backend;
+        proxy_pass         ${BACKEND_URL};
         proxy_http_version 1.1;
-        proxy_set_header   Host              $host;
+        proxy_set_header   Host              $proxy_host;
         proxy_set_header   X-Real-IP         $remote_addr;
         proxy_set_header   X-Forwarded-For   $proxy_add_x_forwarded_for;
         proxy_set_header   X-Forwarded-Proto $scheme;
+        proxy_ssl_server_name on;
     }
 
     # ---- basic hardening headers ----

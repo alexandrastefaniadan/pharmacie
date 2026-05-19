@@ -7,12 +7,15 @@
 
 spring:
   datasource:
-    # Either provide the JDBC URL directly via DB_URL (jdbc:postgresql://…),
-    # or set DATABASE_URL to the postgres://… style provided by most PaaS
-    # platforms (Render, Railway, Heroku) and we convert it at boot.
-    url: ${DB_URL:${DATABASE_URL:}}
-    username: ${DB_USER:}
-    password: ${DB_PASSWORD:}
+    # Resolution order:
+    #   1. DB_URL              (explicit JDBC URL — used by docker-compose)
+    #   2. PGHOST/PGPORT/PGDATABASE  (Railway managed Postgres injects these)
+    # On Railway prefer the *private* host to avoid egress; their plugin sets
+    # PGHOST to the private hostname automatically when the services share a
+    # project.
+    url: ${DB_URL:jdbc:postgresql://${PGHOST:localhost}:${PGPORT:5432}/${PGDATABASE:pharmacie}}
+    username: ${DB_USER:${PGUSER:pharmacie}}
+    password: ${DB_PASSWORD:${PGPASSWORD:pharmacie}}
     hikari:
       maximum-pool-size: 10
       minimum-idle: 2
@@ -35,7 +38,9 @@ spring:
         secure: true
 
 server:
-  # Trust X-Forwarded-* headers from the reverse proxy (Render, nginx) so the
+  # Railway sets PORT dynamically; fall back to 8080 for docker-compose.
+  port: ${PORT:8080}
+  # Trust X-Forwarded-* headers from the reverse proxy (Railway, nginx) so the
   # app sees the real client IP and the HTTPS scheme.
   forward-headers-strategy: framework
   error:
@@ -56,4 +61,3 @@ app:
   security:
     admin-username: ${ADMIN_USERNAME:}
     admin-password: ${ADMIN_PASSWORD:}
-

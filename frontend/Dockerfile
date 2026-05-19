@@ -30,14 +30,24 @@ RUN npx ng build --configuration production
 # ---- Stage 2 : runtime ----
 FROM nginx:alpine
 
-# Replace the default config with our SPA-aware one (history fallback +
-# /api proxy). See nginx.conf in this directory.
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# The nginx image runs `envsubst` on every *.template file in
+# /etc/nginx/templates at container start and writes the result to
+# /etc/nginx/conf.d. This lets the same image work locally (BACKEND_URL=
+# http://backend:8080, PORT=80) and on Railway (BACKEND_URL=https://<backend
+# public url>, PORT=$PORT).
+COPY default.conf.template /etc/nginx/templates/default.conf.template
+
+# Only substitute the variables we want. Anything else (e.g. $host,
+# $remote_addr) stays as a literal nginx variable.
+ENV NGINX_ENVSUBST_TEMPLATE_SUFFIX=".template" \
+    PORT=80 \
+    BACKEND_URL=http://backend:8080
 
 # Copy the compiled SPA. Angular 17+ outputs to dist/<project>/browser.
 COPY --from=build /workspace/dist/frontend/browser /usr/share/nginx/html
 
+# Document the default port; Railway will override via the PORT env var and
+# wire its router to whatever the container listens on.
 EXPOSE 80
 
 # Nginx default CMD is fine; we just need it in the foreground.
-
