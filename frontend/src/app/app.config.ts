@@ -8,12 +8,15 @@ import Aura from '@primeuix/themes/aura';
 
 import { routes } from './app.routes';
 import { errorInterceptor } from '@core/interceptors/error.interceptor';
+import { authInterceptor } from '@core/interceptors/auth.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes, withComponentInputBinding()),
-    provideHttpClient(withInterceptors([errorInterceptor])),
+    // Order matters: authInterceptor runs first (adds withCredentials,
+    // catches 401 → redirect), errorInterceptor surfaces all other errors.
+    provideHttpClient(withInterceptors([authInterceptor, errorInterceptor])),
     provideAnimationsAsync(),
     providePrimeNG({
       theme: {

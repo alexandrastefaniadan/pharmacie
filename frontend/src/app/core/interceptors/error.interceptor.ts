@@ -13,6 +13,12 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(req).pipe(
     catchError((err: HttpErrorResponse) => {
+      // 401s are handled by the auth interceptor (redirect to /login). Don't
+      // double-notify the user with a generic toast on top of that.
+      if (err.status === 401) {
+        return throwError(() => err);
+      }
+
       const problem = err.error as { title?: string; detail?: string } | null;
       const title = problem?.title ?? defaultTitle(err.status);
       const detail = problem?.detail ?? err.message ?? 'Une erreur est survenue.';

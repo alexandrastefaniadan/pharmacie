@@ -1,13 +1,44 @@
 <div class="app-shell">
-  <header class="app-topbar">
-    <i class="pi pi-prescription" style="font-size: 1.5rem; color: var(--p-primary-color)"></i>
-    <h1>Pharmacie</h1>
-  </header>
+  @if (showChrome()) {
+    <header class="app-topbar">
+      <div class="app-brand">
+        <i class="pi pi-prescription" style="font-size: 1.5rem; color: var(--p-primary-color)"></i>
+        <h1>Pharmacie</h1>
+      </div>
+      <p-menubar [model]="menuItems()" styleClass="app-menubar" />
+      @if (auth.isAuthenticated()) {
+        <div class="app-user">
+          <span class="user-avatar" [attr.aria-label]="auth.user()?.username">{{ userInitial() }}</span>
+          <span class="user-name">{{ auth.user()?.username }}</span>
+          <p-button
+            icon="pi pi-key"
+            severity="secondary"
+            [text]="true"
+            (onClick)="showChangePassword.set(true)"
+            pTooltip="Changer le mot de passe"
+            aria-label="Changer le mot de passe"
+          />
+          <p-button
+            icon="pi pi-sign-out"
+            severity="secondary"
+            [text]="true"
+            (onClick)="logout()"
+            pTooltip="Déconnexion"
+            aria-label="Déconnexion"
+          />
+        </div>
+      }
+    </header>
+  }
 
-  <main class="app-content">
+  <main class="app-content" [class.no-chrome]="!showChrome()">
     <router-outlet />
   </main>
 
   <p-toast position="top-right" />
   <p-confirmDialog />
+
+  @if (auth.isAuthenticated()) {
+    <app-change-password-dialog [(visible)]="showChangePasswordModel" />
+  }
 </div>

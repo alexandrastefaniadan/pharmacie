@@ -1,0 +1,46 @@
+<div class="login-shell">
+  <form [formGroup]="form" class="login-card" (ngSubmit)="submit()">
+    <div class="brand">
+      <i class="pi pi-prescription"></i>
+      <h1>Pharmacie</h1>
+    </div>
+
+    <p class="subtitle">Veuillez vous connecter pour continuer.</p>
+
+    <label class="field">
+      <span>Nom d'utilisateur</span>
+      <input
+        pInputText
+        type="text"
+        formControlName="username"
+        autocomplete="username"
+        autofocus
+      />
+    </label>
+
+    <label class="field">
+      <span>Mot de passe</span>
+      <p-password
+        formControlName="password"
+        [toggleMask]="true"
+        [feedback]="false"
+        inputStyleClass="w-full"
+        styleClass="w-full"
+      />
+    </label>
+
+    @if (error()) {
+      <p-message severity="error" [text]="error()!" styleClass="w-full" />
+    }
+
+    <p-button
+      type="submit"
+      label="Connexion"
+      icon="pi pi-sign-in"
+      [loading]="loading()"
+      [disabled]="form.invalid || loading()"
+      styleClass="w-full"
+    />
+  </form>
+</div>
+
