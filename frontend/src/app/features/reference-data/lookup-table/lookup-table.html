@@ -1,0 +1,107 @@
+<div class="lookup-table">
+  <div class="toolbar">
+    <h3 class="title">{{ title }} <span class="count">({{ rows.length }})</span></h3>
+    <p-button
+      label="Ajouter"
+      icon="pi pi-plus"
+      size="small"
+      (onClick)="openCreate()"
+    />
+  </div>
+
+  <p-table
+    [value]="rows"
+    [paginator]="rows.length > 25"
+    [rows]="25"
+    [rowsPerPageOptions]="[25, 50, 100]"
+    sortField="labelFr"
+    [sortOrder]="1"
+    [scrollable]="true"
+    scrollHeight="60vh"
+    dataKey="id"
+    [tableStyle]="{ 'min-width': '30rem' }"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th pSortableColumn="labelFr">Nom <p-sortIcon field="labelFr" /></th>
+        <th style="width: 8rem"></th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-row>
+      <tr>
+        <td>{{ row.labelFr }}</td>
+        <td>
+          <div class="row-actions">
+            <p-button
+              icon="pi pi-pencil"
+              size="small"
+              severity="secondary"
+              [text]="true"
+              (onClick)="openEdit(row)"
+              pTooltip="Modifier"
+            />
+            <p-button
+              icon="pi pi-trash"
+              size="small"
+              severity="danger"
+              [text]="true"
+              (onClick)="confirmDelete(row)"
+              pTooltip="Supprimer"
+            />
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="2" class="text-muted" style="text-align: center; padding: 1.5rem">
+          Aucun élément. Cliquez sur « Ajouter » pour en créer un.
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+
+<p-dialog
+  [(visible)]="dialogVisible"
+  [modal]="true"
+  [draggable]="false"
+  [resizable]="false"
+  [style]="{ width: '28rem' }"
+  [header]="model().id == null ? 'Ajouter — ' + title : 'Modifier — ' + title"
+>
+  <div class="form-grid">
+    <label>
+      <span>Nom <span class="required">*</span></span>
+      <input
+        pInputText
+        type="text"
+        [ngModel]="model().labelFr"
+        (ngModelChange)="model.update((m) => ({ ...m, labelFr: $event }))"
+        (keydown.enter)="save()"
+        placeholder="Ex : Sirop"
+        autocomplete="off"
+        autofocus
+      />
+    </label>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <p-button
+      label="Annuler"
+      icon="pi pi-times"
+      severity="secondary"
+      [text]="true"
+      (onClick)="dialogVisible = false"
+    />
+    <p-button
+      label="Enregistrer"
+      icon="pi pi-check"
+      [loading]="saving()"
+      [disabled]="!model().labelFr.trim()"
+      (onClick)="save()"
+    />
+  </ng-template>
+</p-dialog>

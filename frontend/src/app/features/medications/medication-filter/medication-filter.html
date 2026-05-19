@@ -12,9 +12,10 @@
   </p-iconField>
 
   <p-multiSelect
-    [options]="lookups.forms()"
+    [options]="formOptions()"
     optionLabel="labelFr"
     optionValue="id"
+    optionDisabled="disabled"
     [(ngModel)]="formIds"
     (onChange)="emit()"
     placeholder="Forme"
@@ -25,9 +26,10 @@
   />
 
   <p-multiSelect
-    [options]="lookups.indications()"
+    [options]="indicationOptions()"
     optionLabel="labelFr"
     optionValue="id"
+    optionDisabled="disabled"
     [(ngModel)]="indicationIds"
     (onChange)="emit()"
     placeholder="Indication"
@@ -38,9 +40,10 @@
   />
 
   <p-multiSelect
-    [options]="lookups.ageGroups()"
+    [options]="ageGroupOptions()"
     optionLabel="labelFr"
     optionValue="id"
+    optionDisabled="disabled"
     [(ngModel)]="ageGroupIds"
     (onChange)="emit()"
     placeholder="Âge"
@@ -50,9 +53,10 @@
   />
 
   <p-multiSelect
-    [options]="lookups.therapeuticClasses()"
+    [options]="therapeuticClassOptions()"
     optionLabel="labelFr"
     optionValue="id"
+    optionDisabled="disabled"
     [(ngModel)]="therapeuticClassIds"
     (onChange)="emit()"
     placeholder="Classe thérapeutique"

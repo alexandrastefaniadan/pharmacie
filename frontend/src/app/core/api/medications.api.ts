@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from '@env/environment';
 import {
   MedicationCreateRequest,
+  MedicationFacets,
   MedicationFilter,
   MedicationResponse,
   MedicationUpdateRequest,
@@ -40,6 +41,21 @@ export class MedicationsApi {
     return this.http.get<Page<MedicationResponse>>(this.url, { params });
   }
 
+  /** Cascading-filter facets for the current filter selection. */
+  facets(filter: MedicationFilter): Observable<MedicationFacets> {
+    let params = new HttpParams();
+    params = appendIfDefined(params, 'q', filter.q);
+    params = appendList(params, 'formIds', filter.formIds);
+    params = appendList(params, 'ageGroupIds', filter.ageGroupIds);
+    params = appendList(params, 'therapeuticClassIds', filter.therapeuticClassIds);
+    params = appendList(params, 'indicationIds', filter.indicationIds);
+    if (filter.parapharmacy !== undefined && filter.parapharmacy !== null) {
+      params = params.set('parapharmacy', String(filter.parapharmacy));
+    }
+    params = appendIfDefined(params, 'dataSource', filter.dataSource);
+    return this.http.get<MedicationFacets>(`${this.url}/facets`, { params });
+  }
+
   getById(id: string): Observable<MedicationResponse> {
     return this.http.get<MedicationResponse>(`${this.url}/${id}`);
   }
@@ -67,4 +83,3 @@ function appendList(p: HttpParams, key: string, values?: number[]): HttpParams {
   for (const v of values) out = out.append(key, String(v));
   return out;
 }
-

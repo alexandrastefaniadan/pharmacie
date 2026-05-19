@@ -32,6 +32,7 @@ import {
   MedicationResponse,
   MedicationUpdateRequest,
 } from '@core/models/medication.model';
+import { PriceTierComponent } from '@shared/price-tier/price-tier';
 
 /**
  * Create / edit dialog. Used in two modes:
@@ -58,6 +59,7 @@ import {
     SelectModule,
     MultiSelectModule,
     CheckboxModule,
+    PriceTierComponent,
   ],
   templateUrl: './medication-form-dialog.html',
   styleUrl: './medication-form-dialog.scss',
@@ -85,6 +87,7 @@ export class MedicationFormDialogComponent implements OnInit {
     dosage: ['', Validators.maxLength(80)],
     description: [''],
     parapharmacy: [false],
+    priceTier: [0],
     formId: [null as number | null],
     ageGroupIds: [[] as number[]],
     therapeuticClassIds: [[] as number[]],
@@ -101,6 +104,7 @@ export class MedicationFormDialogComponent implements OnInit {
         dosage: m.dosage ?? '',
         description: m.description ?? '',
         parapharmacy: m.parapharmacy,
+        priceTier: m.priceTier ?? 0,
         formId: m.form?.id ?? null,
         ageGroupIds: m.ageGroups.map((a) => a.id),
         therapeuticClassIds: m.therapeuticClasses.map((c) => c.id),
@@ -119,6 +123,7 @@ export class MedicationFormDialogComponent implements OnInit {
       dosage: raw.dosage?.trim() || null,
       description: raw.description?.trim() || null,
       parapharmacy: !!raw.parapharmacy,
+      priceTier: typeof raw.priceTier === 'number' ? raw.priceTier : 0,
       formId: raw.formId,
       ageGroupIds: raw.ageGroupIds ?? [],
       therapeuticClassIds: raw.therapeuticClassIds ?? [],

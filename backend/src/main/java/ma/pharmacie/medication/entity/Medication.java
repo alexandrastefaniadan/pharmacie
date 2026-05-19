@@ -73,6 +73,15 @@ public class Medication extends Auditable {
     @Builder.Default
     private boolean parapharmacy = false;
 
+    /**
+     * Manual visual price ranking (0..5), entered by the pharmacist. 0 means
+     * "not rated"; higher values are shown as more dollar icons in the UI.
+     * We intentionally do not store actual prices.
+     */
+    @Column(name = "price_tier", nullable = false)
+    @Builder.Default
+    private int priceTier = 0;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "form_id")
     private PharmaceuticalForm form;

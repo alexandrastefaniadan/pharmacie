@@ -15,6 +15,15 @@
 
 .row-name {
   font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+.row-name-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .row-inn {
@@ -34,16 +43,8 @@
   color: var(--p-text-muted-color);
 }
 
-.description-cell {
-  max-width: 24rem;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  color: var(--p-text-muted-color);
-}
-
+.description-cell,
 .truncate {
-  max-width: 16rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

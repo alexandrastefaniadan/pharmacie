@@ -96,6 +96,16 @@
     <div class="field full parapharmacy-row">
       <p-checkbox formControlName="parapharmacy" [binary]="true" inputId="parapharmacy" />
       <label for="parapharmacy">Parapharmacie</label>
+
+      <span class="price-tier-field">
+        <label class="price-tier-label">Niveau de prix</label>
+        <app-price-tier
+          [value]="form.get('priceTier')?.value ?? 0"
+          [editable]="true"
+          (valueChange)="form.get('priceTier')?.setValue($event)"
+        />
+        <small class="text-muted">(cliquez pour évaluer, recliquez pour effacer)</small>
+      </span>
     </div>
   </form>
 

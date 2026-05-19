@@ -1,0 +1,57 @@
+<section class="page-header">
+  <div>
+    <h2>Catégories</h2>
+    <p class="text-muted">
+      Gérez les listes qui alimentent les filtres et le formulaire des médicaments.
+    </p>
+  </div>
+</section>
+
+<p-tabs value="forms">
+  <p-tablist>
+    <p-tab value="forms"
+      ><i class="pi pi-tablet" style="margin-right: 0.5rem"></i>Formes</p-tab
+    >
+    <p-tab value="indications"
+      ><i class="pi pi-heart" style="margin-right: 0.5rem"></i>Indications</p-tab
+    >
+    <p-tab value="age-groups"
+      ><i class="pi pi-users" style="margin-right: 0.5rem"></i>Âge</p-tab
+    >
+    <p-tab value="therapeutic-classes"
+      ><i class="pi pi-book" style="margin-right: 0.5rem"></i
+      >Classes thérapeutiques</p-tab
+    >
+  </p-tablist>
+
+  <p-tabpanels>
+    <p-tabpanel value="forms">
+      <app-lookup-table
+        kind="forms"
+        title="Formes galéniques"
+        [rows]="lookups.forms()"
+      />
+    </p-tabpanel>
+    <p-tabpanel value="indications">
+      <app-lookup-table
+        kind="indications"
+        title="Indications"
+        [rows]="lookups.indications()"
+      />
+    </p-tabpanel>
+    <p-tabpanel value="age-groups">
+      <app-lookup-table
+        kind="age-groups"
+        title="Tranches d'âge"
+        [rows]="lookups.ageGroups()"
+      />
+    </p-tabpanel>
+    <p-tabpanel value="therapeutic-classes">
+      <app-lookup-table
+        kind="therapeutic-classes"
+        title="Classes thérapeutiques"
+        [rows]="lookups.therapeuticClasses()"
+      />
+    </p-tabpanel>
+  </p-tabpanels>
+</p-tabs>

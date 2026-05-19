@@ -59,11 +59,11 @@ class MedicationServiceIntegrationTest {
 
         MedicationResponse syrup = service.create(new MedicationCreateRequest(
                 "Toplexil enfant", "oxomemazine", "1.65 mg/5ml", null,
-                false, syrupId, Set.of(childId), null, Set.of(coughDry), null, null));
+                false, null, syrupId, Set.of(childId), null, Set.of(coughDry), null, null));
 
         service.create(new MedicationCreateRequest(
                 "Cicatryl",       "trolamine",   null, null,
-                false, creamId, Set.of(adultId), null, Set.of(wound), null, null));
+                false, null, creamId, Set.of(adultId), null, Set.of(wound), null, null));
 
         // 1) filter that should match exactly one (syrup + dry cough + child)
         Page<MedicationResponse> hits = service.search(
@@ -90,7 +90,7 @@ class MedicationServiceIntegrationTest {
         Integer syrupId = lookupId("pharmaceutical_form", "SYRUP");
         MedicationResponse m = service.create(new MedicationCreateRequest(
                 "Doliprane sirop", "paracétamol", "2.4%", null,
-                false, syrupId, null, null, null, null, null));
+                false, null, syrupId, null, null, null, null, null));
 
         service.delete(m.id());
 

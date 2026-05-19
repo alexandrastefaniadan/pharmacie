@@ -8,6 +8,8 @@ export interface MedicationResponse {
   dosage: string | null;
   description: string | null;
   parapharmacy: boolean;
+  /** Manual visual price ranking (0..5). 0 = not rated. */
+  priceTier: number;
   form: LookupDto | null;
   ageGroups: LookupDto[];
   therapeuticClasses: LookupDto[];
@@ -27,6 +29,8 @@ export interface MedicationCreateRequest {
   dosage?: string | null;
   description?: string | null;
   parapharmacy?: boolean;
+  /** Manual visual price ranking (0..5). 0 = not rated. */
+  priceTier?: number | null;
   formId?: number | null;
   ageGroupIds?: number[];
   therapeuticClassIds?: number[];
@@ -58,3 +62,16 @@ export interface PageRequest {
   sort?: string[];     // each element is "field,asc" or "field,desc"
 }
 
+/** Single facet entry returned by GET /api/v1/medications/facets. */
+export interface FacetCount {
+  id: number;
+  count: number;
+}
+
+/** Cascading-filter facets — one list per lookup dimension. */
+export interface MedicationFacets {
+  forms: FacetCount[];
+  ageGroups: FacetCount[];
+  therapeuticClasses: FacetCount[];
+  indications: FacetCount[];
+}

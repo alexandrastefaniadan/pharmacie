@@ -16,6 +16,8 @@ public record MedicationResponse(
         String dosage,
         String description,
         boolean parapharmacy,
+        @Schema(description = "Manual visual price ranking (0..5). 0 = not rated.", example = "3")
+        int priceTier,
         LookupDto form,
         List<LookupDto> ageGroups,
         List<LookupDto> therapeuticClasses,

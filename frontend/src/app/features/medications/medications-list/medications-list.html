@@ -17,28 +17,31 @@
   [rowsPerPageOptions]="[25, 50, 100, 200]"
   [loading]="loading()"
   sortMode="single"
+  sortField="priceTier"
+  [sortOrder]="-1"
   [showCurrentPageReport]="true"
   currentPageReportTemplate="{first} – {last} sur {totalRecords}"
   [scrollable]="true"
   scrollHeight="flex"
+  [tableStyle]="{ 'table-layout': 'fixed', 'min-width': '85rem' }"
   stripedRows
   responsiveLayout="scroll"
 >
   <ng-template pTemplate="header">
     <tr>
-      <th pSortableColumn="name" style="min-width: 14rem">
+      <th pSortableColumn="name" style="width: 16rem">
         Nom <p-sortIcon field="name" />
       </th>
-      <th pSortableColumn="form.labelFr" style="min-width: 9rem">
+      <th pSortableColumn="form.labelFr" style="width: 9rem">
         Forme <p-sortIcon field="form.labelFr" />
       </th>
-      <th pSortableColumn="dosage" style="min-width: 7rem">
+      <th pSortableColumn="dosage" style="width: 7rem">
         Dosage <p-sortIcon field="dosage" />
       </th>
-      <th style="min-width: 9rem">Âge</th>
-      <th style="min-width: 10rem">Indications</th>
-      <th style="min-width: 10rem">Classes thérapeutiques</th>
-      <th style="min-width: 10rem">Description</th>
+      <th style="width: 10rem">Âge</th>
+      <th style="width: 12rem">Indications</th>
+      <th style="width: 12rem">Classes thérapeutiques</th>
+      <th style="width: 10rem">Description</th>
       <th class="actions-col">Actions</th>
     </tr>
   </ng-template>
@@ -46,7 +49,12 @@
   <ng-template pTemplate="body" let-m>
     <tr>
       <td>
-        <div class="row-name">{{ m.name }}</div>
+        <div class="row-name">
+          <span class="row-name-text">{{ m.name }}</span>
+          @if (m.priceTier > 0) {
+            <app-price-tier [value]="m.priceTier" />
+          }
+        </div>
         @if (m.inn) {
           <div class="row-inn">{{ m.inn }}</div>
         }

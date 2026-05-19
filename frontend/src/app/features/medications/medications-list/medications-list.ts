@@ -24,6 +24,7 @@ import { Page } from '@core/models/page.model';
 import { MedicationFilterComponent } from '../medication-filter/medication-filter';
 import { MedicationFormDialogComponent } from '../medication-form-dialog/medication-form-dialog';
 import { JoinLabelsPipe } from '@shared/pipes/join-labels/join-labels.pipe';
+import { PriceTierComponent } from '@shared/price-tier/price-tier';
 
 /**
  * Main catalog screen.
@@ -47,6 +48,7 @@ import { JoinLabelsPipe } from '@shared/pipes/join-labels/join-labels.pipe';
     MedicationFilterComponent,
     MedicationFormDialogComponent,
     JoinLabelsPipe,
+    PriceTierComponent,
   ],
   templateUrl: './medications-list.html',
   styleUrl: './medications-list.scss',
@@ -83,6 +85,9 @@ export class MedicationsListPage {
     if (event.sortField) {
       const dir = (event.sortOrder ?? 1) === 1 ? 'asc' : 'desc';
       sort.push(`${event.sortField as string},${dir}`);
+      // Deterministic secondary sort: ties (typical on priceTier) fall back
+      // to alphabetical name. Skipped when the user is already sorting by name.
+      if (event.sortField !== 'name') sort.push('name,asc');
     }
 
     this.loading.set(true);
