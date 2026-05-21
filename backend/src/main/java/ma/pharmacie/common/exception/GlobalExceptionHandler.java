@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.net.URI;
 import java.time.Instant;
@@ -95,6 +96,21 @@ public class GlobalExceptionHandler {
                 "The uploaded file exceeds the allowed size.", "upload-too-large");
     }
 
+    // ---- pass-through for explicit ResponseStatusException (401, 403, …) ----
+    // Without this, the catch-all below would log them as "Unhandled" and
+    // return a misleading 500 to the client. Reason phrase is used as detail
+    // when available, otherwise we fall back to a sensible message.
+    @ExceptionHandler(ResponseStatusException.class)
+    public ProblemDetail handleResponseStatus(ResponseStatusException ex) {
+        HttpStatus status = HttpStatus.resolve(ex.getStatusCode().value());
+        if (status == null) {
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+        String detail = ex.getReason() != null ? ex.getReason() : status.getReasonPhrase();
+        String slug = status.name().toLowerCase().replace('_', '-');
+        return problem(status, status.getReasonPhrase(), detail, slug);
+    }
+
     // ---- 500: catch-all ----
     @ExceptionHandler(Exception.class)
     public ProblemDetail handleUnexpected(Exception ex) {
@@ -112,4 +128,3 @@ public class GlobalExceptionHandler {
         return pd;
     }
 }
-
