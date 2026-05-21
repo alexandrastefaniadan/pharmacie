@@ -37,11 +37,18 @@ FROM nginx:alpine
 # public url>, PORT=$PORT).
 COPY default.conf.template /etc/nginx/templates/default.conf.template
 
-# Only substitute the variables we want. Anything else (e.g. $host,
-# $remote_addr) stays as a literal nginx variable.
+# Defaults for the template substitution. The 19-defaults.envsh script below
+# re-applies these at container startup as well, so the config is valid even
+# when the host platform exports BACKEND_URL as an empty string (which would
+# defeat the ENV defaults).
 ENV NGINX_ENVSUBST_TEMPLATE_SUFFIX=".template" \
     PORT=80 \
     BACKEND_URL=http://backend:8080
+
+# Init script sourced (because of the .envsh suffix) by the nginx image's
+# entrypoint *before* the envsubst step. Guarantees BACKEND_URL / PORT have
+# a value even if the runtime environment exports them as empty strings.
+COPY docker-entrypoint.d/19-defaults.envsh /docker-entrypoint.d/19-defaults.envsh
 
 # Copy the compiled SPA. Angular 17+ outputs to dist/<project>/browser.
 COPY --from=build /workspace/dist/frontend/browser /usr/share/nginx/html

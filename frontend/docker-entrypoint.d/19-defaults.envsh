@@ -1,0 +1,27 @@
+#!/bin/sh
+#
+# Runs before /docker-entrypoint.d/20-envsubst-on-templates.sh (the official
+# nginx image's template processor). Guarantees that BACKEND_URL and PORT
+# are non-empty so the substituted nginx config is always valid.
+#
+# The `.envsh` extension matters: the nginx image SOURCES *.envsh scripts
+# (so the exports below propagate to the parent shell), whereas *.sh
+# scripts are merely executed in a subshell.
+#
+# Defaults:
+#   BACKEND_URL  http://backend:8080   (matches the docker-compose service name)
+#   PORT         80
+#
+# Behaviour:
+# - If the variable is unset OR empty, we apply the default. This catches the
+#   common PaaS gotcha where the platform exports an empty string instead of
+#   leaving the variable unset, which would otherwise defeat the Dockerfile's
+#   `ENV` defaults.
+
+: "${BACKEND_URL:=http://backend:8080}"
+: "${PORT:=80}"
+export BACKEND_URL PORT
+
+echo "[19-defaults] BACKEND_URL=${BACKEND_URL}"
+echo "[19-defaults] PORT=${PORT}"
+
