@@ -51,7 +51,7 @@ export class App {
       icon: 'pi pi-list-check',
       items: [
         { label: 'Traitements humains',      icon: 'pi pi-user',       routerLink: '/treatments' },
-        { label: 'Traitements vétérinaires', icon: 'pi pi-microchip',  routerLink: '/veterinary-treatments' },
+        { label: 'Traitements vétérinaires', icon: 'pi pi-wave-pulse',  routerLink: '/veterinary-treatments' },
       ],
     },
     { label: 'Catégories', icon: 'pi pi-sliders-h', routerLink: '/categories' },
