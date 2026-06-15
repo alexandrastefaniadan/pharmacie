@@ -11,7 +11,7 @@ export const USAGE_TYPE_OPTIONS: ReadonlyArray<{
   icon: string;
 }> = [
   { value: 'HUMAN',      label: 'Humain',      icon: 'pi pi-user' },
-  { value: 'VETERINARY', label: 'Vétérinaire', icon: 'pi pi-paw' },
+  { value: 'VETERINARY', label: 'Vétérinaire', icon: 'pi pi-microchip' },
 ];
 
 /** Human-readable label for a usage type — used in badges / table cells. */
