@@ -1,0 +1,41 @@
+:host {
+  display: block;
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+
+  h2 {
+    margin: 0;
+  }
+}
+
+.row-name {
+  font-weight: 500;
+}
+
+.actions-col {
+  width: 7rem;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.empty-row {
+  text-align: center;
+  padding: 2rem;
+  color: var(--p-text-muted-color);
+}
+
+.truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.muted {
+  color: var(--p-text-muted-color);
+}
+

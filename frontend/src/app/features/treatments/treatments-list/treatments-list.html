@@ -1,0 +1,98 @@
+<div class="page-header">
+  <h2>{{ pageTitle }}</h2>
+  <p-button label="Ajouter" icon="pi pi-plus" (onClick)="openCreate()" />
+</div>
+
+<app-treatment-filter (filterChange)="onFilterChange($event)" />
+
+<p-table
+  #dt
+  [value]="rows()"
+  [lazy]="true"
+  (onLazyLoad)="loadLazy($event)"
+  dataKey="id"
+  [paginator]="true"
+  [rows]="pageSize()"
+  [totalRecords]="total()"
+  [rowsPerPageOptions]="[25, 50, 100]"
+  [loading]="loading()"
+  sortMode="single"
+  sortField="name"
+  [sortOrder]="1"
+  [showCurrentPageReport]="true"
+  currentPageReportTemplate="{first} – {last} sur {totalRecords}"
+  [scrollable]="true"
+  scrollHeight="flex"
+  [tableStyle]="{ 'table-layout': 'fixed', 'min-width': '60rem' }"
+  stripedRows
+  responsiveLayout="scroll"
+>
+  <ng-template pTemplate="header">
+    <tr>
+      <th pSortableColumn="name" style="width: 18rem">
+        Nom <p-sortIcon field="name" />
+      </th>
+      <th style="width: 20rem">Médicaments</th>
+      <th style="width: 14rem">Indications</th>
+      <th style="width: 14rem">Description</th>
+      <th class="actions-col">Actions</th>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="body" let-t>
+    <tr>
+      <td>
+        <span class="row-name">{{ t.name }}</span>
+      </td>
+      <td
+        class="truncate"
+        [pTooltip]="medNames(t)"
+        tooltipPosition="top"
+      >
+        {{ medNames(t) }}
+      </td>
+      <td
+        class="truncate"
+        [pTooltip]="(t.indications | joinLabels) || ''"
+        tooltipPosition="top"
+      >
+        {{ t.indications | joinLabels }}
+      </td>
+      <td class="truncate muted" [pTooltip]="t.description || ''" tooltipPosition="top">
+        {{ t.description }}
+      </td>
+      <td class="actions-col">
+        <p-button
+          icon="pi pi-pencil"
+          [text]="true"
+          severity="secondary"
+          pTooltip="Modifier"
+          (onClick)="openEdit(t)"
+        />
+        <p-button
+          icon="pi pi-trash"
+          [text]="true"
+          severity="danger"
+          pTooltip="Supprimer"
+          (onClick)="confirmDelete(t)"
+        />
+      </td>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="emptymessage">
+    <tr>
+      <td colspan="5" class="empty-row">Aucun traitement trouvé.</td>
+    </tr>
+  </ng-template>
+</p-table>
+
+@if (showDialog()) {
+  <app-treatment-form-dialog
+    [(visible)]="showDialogModel"
+    [treatment]="editing()"
+    [usageType]="usageType()"
+    (saved)="onSaved()"
+  />
+}
+

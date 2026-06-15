@@ -2,6 +2,7 @@ package ma.pharmacie.medication.spec;
 
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.JoinType;
+import ma.pharmacie.common.enums.UsageType;
 import ma.pharmacie.lookup.entity.AgeGroup;
 import ma.pharmacie.lookup.entity.Indication;
 import ma.pharmacie.lookup.entity.PharmaceuticalForm;
@@ -38,6 +39,7 @@ public final class MedicationSpecifications {
                 therapeuticClassIn(f.therapeuticClassIds()),
                 indicationIn(f.indicationIds()),
                 parapharmacyEq(f.parapharmacy()),
+                usageTypeEq(f.usageType()),
                 dataSourceEq(f.dataSource())
         );
     }
@@ -90,6 +92,11 @@ public final class MedicationSpecifications {
     private static Specification<Medication> parapharmacyEq(Boolean v) {
         if (v == null) return null;
         return (root, cq, cb) -> cb.equal(root.get("parapharmacy"), v);
+    }
+
+    private static Specification<Medication> usageTypeEq(UsageType v) {
+        if (v == null) return null;
+        return (root, cq, cb) -> cb.equal(root.get("usageType"), v);
     }
 
     private static Specification<Medication> dataSourceEq(String src) {

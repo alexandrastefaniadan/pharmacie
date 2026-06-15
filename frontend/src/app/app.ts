@@ -46,6 +46,14 @@ export class App {
 
   protected readonly menuItems = signal<MenuItem[]>([
     { label: 'Médicaments', icon: 'pi pi-prescription', routerLink: '/medications' },
+    {
+      label: 'Traitements',
+      icon: 'pi pi-list-check',
+      items: [
+        { label: 'Traitements humains',      icon: 'pi pi-user',  routerLink: '/treatments' },
+        { label: 'Traitements vétérinaires', icon: 'pi pi-paw',   routerLink: '/veterinary-treatments' },
+      ],
+    },
     { label: 'Catégories', icon: 'pi pi-sliders-h', routerLink: '/categories' },
   ]);
 
@@ -57,12 +65,7 @@ export class App {
     this.router.events.pipe(filter((e) => e instanceof NavigationEnd)).subscribe(() => {
       const url = this.router.url;
       this.showChrome.set(!url.startsWith('/login'));
-      this.menuItems.update((items) =>
-        items.map((it) => ({
-          ...it,
-          styleClass: url.startsWith(it['routerLink'] as string) ? 'menu-active' : '',
-        })),
-      );
+      this.menuItems.update((items) => applyActiveClass(items, url));
     });
   }
 
@@ -70,3 +73,16 @@ export class App {
     this.auth.logout().subscribe(() => this.router.navigate(['/login']));
   }
 }
+
+/**
+ * Recursively marks menu items (and sub-items) with the 'menu-active' CSS
+ * class when their routerLink matches the current URL.
+ */
+function applyActiveClass(items: import('primeng/api').MenuItem[], url: string): import('primeng/api').MenuItem[] {
+  return items.map((it) => ({
+    ...it,
+    styleClass: it['routerLink'] && url.startsWith(it['routerLink'] as string) ? 'menu-active' : '',
+    items: it.items ? applyActiveClass(it.items, url) : it.items,
+  }));
+}
+

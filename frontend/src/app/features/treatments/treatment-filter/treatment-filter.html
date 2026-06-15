@@ -1,0 +1,35 @@
+<div class="filter-grid">
+  <p-iconField iconPosition="left">
+    <p-inputIcon styleClass="pi pi-search" />
+    <input
+      pInputText
+      type="text"
+      placeholder="Rechercher un traitement..."
+      [ngModel]="q()"
+      (ngModelChange)="onTextChange($event)"
+      style="width: 100%"
+    />
+  </p-iconField>
+
+  <p-multiSelect
+    [options]="lookups.indications()"
+    optionLabel="labelFr"
+    optionValue="id"
+    [(ngModel)]="indicationIds"
+    (onChange)="emit()"
+    placeholder="Indication"
+    [filter]="true"
+    [showClear]="true"
+    appendTo="body"
+    styleClass="w-full"
+  />
+
+  <p-button
+    label="Réinitialiser"
+    icon="pi pi-times"
+    severity="secondary"
+    [text]="true"
+    (onClick)="reset()"
+  />
+</div>
+

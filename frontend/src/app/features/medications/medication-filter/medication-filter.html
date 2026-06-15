@@ -1,3 +1,15 @@
+<div class="usage-type-row">
+  <p-selectButton
+    [options]="usageTypeOptions"
+    optionLabel="label"
+    optionValue="value"
+    [(ngModel)]="usageType"
+    (onChange)="emit()"
+    [allowEmpty]="false"
+    aria-label="Type d'usage"
+  />
+</div>
+
 <div class="filter-grid">
   <p-iconField iconPosition="left">
     <p-inputIcon styleClass="pi pi-search" />

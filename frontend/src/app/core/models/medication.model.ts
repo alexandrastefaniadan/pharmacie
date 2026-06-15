@@ -1,4 +1,5 @@
 import { LookupDto } from './lookup.model';
+import { UsageType } from './usage-type.model';
 
 /** Medication as returned by the API. */
 export interface MedicationResponse {
@@ -8,6 +9,8 @@ export interface MedicationResponse {
   dosage: string | null;
   description: string | null;
   parapharmacy: boolean;
+  /** HUMAN or VETERINARY. */
+  usageType: UsageType;
   /** Manual visual price ranking (0..5). 0 = not rated. */
   priceTier: number;
   form: LookupDto | null;
@@ -29,6 +32,8 @@ export interface MedicationCreateRequest {
   dosage?: string | null;
   description?: string | null;
   parapharmacy?: boolean;
+  /** Defaults to HUMAN on the backend if omitted. */
+  usageType?: UsageType | null;
   /** Manual visual price ranking (0..5). 0 = not rated. */
   priceTier?: number | null;
   formId?: number | null;
@@ -52,7 +57,21 @@ export interface MedicationFilter {
   therapeuticClassIds?: number[];
   indicationIds?: number[];
   parapharmacy?: boolean;
+  /** Filter by usage type. Undefined = both. */
+  usageType?: UsageType;
   dataSource?: string;
+}
+
+/** Lightweight medication info embedded in other resources (e.g. treatments). */
+export interface MedicationSummary {
+  id: string;
+  name: string;
+  inn: string | null;
+  dosage: string | null;
+  /** Pharmaceutical form label (e.g. "Sirop"). Null if not set. */
+  formLabel: string | null;
+  usageType: UsageType;
+  priceTier: number;
 }
 
 /** Pagination + sort request shape (mirrors Spring Data's Pageable on the wire). */
@@ -75,3 +94,5 @@ export interface MedicationFacets {
   therapeuticClasses: FacetCount[];
   indications: FacetCount[];
 }
+
+

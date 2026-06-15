@@ -15,11 +15,13 @@ import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
+import { SelectButtonModule } from 'primeng/selectbutton';
 
 import { LookupsApi } from '@core/api/lookups.api';
 import { MedicationsApi } from '@core/api/medications.api';
 import { LookupDto } from '@core/models/lookup.model';
 import { MedicationFacets, MedicationFilter } from '@core/models/medication.model';
+import { UsageType } from '@core/models/usage-type.model';
 
 /** A lookup option enriched with the facet count and a "disabled" flag. */
 interface FacetOption extends LookupDto {
@@ -50,6 +52,7 @@ interface FacetOption extends LookupDto {
     CheckboxModule,
     IconFieldModule,
     InputIconModule,
+    SelectButtonModule,
   ],
   templateUrl: './medication-filter.html',
   styleUrl: './medication-filter.scss',
@@ -66,6 +69,15 @@ export class MedicationFilterComponent {
   protected indicationIds: number[] = [];
   protected therapeuticClassIds: number[] = [];
   protected parapharmacy = false;
+  /** undefined = "Tous" (no filter); 'HUMAN' or 'VETERINARY' = strict. */
+  protected usageType: UsageType | undefined = undefined;
+
+  /** Options for the usage-type segmented control. {@code null} means "all". */
+  protected readonly usageTypeOptions = [
+    { label: 'Tous',        value: null },
+    { label: 'Humain',      value: 'HUMAN' },
+    { label: 'Vétérinaire', value: 'VETERINARY' },
+  ];
 
   /** Latest facet counts from the backend, keyed by lookup id per dimension. */
   private readonly facets = signal<MedicationFacets>({
@@ -115,6 +127,7 @@ export class MedicationFilterComponent {
       indicationIds: nonEmpty(this.indicationIds),
       therapeuticClassIds: nonEmpty(this.therapeuticClassIds),
       parapharmacy: this.parapharmacy || undefined,
+      usageType: this.usageType ?? undefined,
     };
     this.filterChange.emit(filter);
     this.refreshFacets(filter);
@@ -127,6 +140,7 @@ export class MedicationFilterComponent {
     this.indicationIds = [];
     this.therapeuticClassIds = [];
     this.parapharmacy = false;
+    this.usageType = undefined;
     this.emit();
   }
 

@@ -36,6 +36,7 @@ export class MedicationsApi {
     if (filter.parapharmacy !== undefined && filter.parapharmacy !== null) {
       params = params.set('parapharmacy', String(filter.parapharmacy));
     }
+    params = appendIfDefined(params, 'usageType', filter.usageType);
     params = appendIfDefined(params, 'dataSource', filter.dataSource);
 
     return this.http.get<Page<MedicationResponse>>(this.url, { params });
@@ -52,6 +53,7 @@ export class MedicationsApi {
     if (filter.parapharmacy !== undefined && filter.parapharmacy !== null) {
       params = params.set('parapharmacy', String(filter.parapharmacy));
     }
+    params = appendIfDefined(params, 'usageType', filter.usageType);
     params = appendIfDefined(params, 'dataSource', filter.dataSource);
     return this.http.get<MedicationFacets>(`${this.url}/facets`, { params });
   }

@@ -8,6 +8,17 @@
   (onHide)="onCancel()"
 >
   <form [formGroup]="form" class="form-grid">
+    <div class="field full usage-type-field">
+      <label>Type *</label>
+      <p-selectButton
+        [options]="usageTypeOptions"
+        optionLabel="label"
+        optionValue="value"
+        formControlName="usageType"
+        [allowEmpty]="false"
+      />
+    </div>
+
     <div class="field full">
       <label>Nom *</label>
       <input pInputText type="text" formControlName="name" />

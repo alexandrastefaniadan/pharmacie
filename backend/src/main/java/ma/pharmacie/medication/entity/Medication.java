@@ -4,6 +4,8 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -19,6 +21,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ma.pharmacie.common.audit.Auditable;
+import ma.pharmacie.common.enums.UsageType;
 import ma.pharmacie.lookup.entity.AgeGroup;
 import ma.pharmacie.lookup.entity.Indication;
 import ma.pharmacie.lookup.entity.PharmaceuticalForm;
@@ -72,6 +75,16 @@ public class Medication extends Auditable {
     @Column(name = "is_parapharmacy", nullable = false)
     @Builder.Default
     private boolean parapharmacy = false;
+
+    /**
+     * Whether this medication is for humans or animals. Stored as a string
+     * for readability. Defaults to {@link UsageType#HUMAN} for back-compat
+     * with rows created before the column existed.
+     */
+    @Enumerated(EnumType.STRING)
+    @Column(name = "usage_type", nullable = false, length = 20)
+    @Builder.Default
+    private UsageType usageType = UsageType.HUMAN;
 
     /**
      * Manual visual price ranking (0..5), entered by the pharmacist. 0 means

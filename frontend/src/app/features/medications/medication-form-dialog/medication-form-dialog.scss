@@ -19,9 +19,17 @@
   font-size: 0.875rem;
 }
 
+.usage-type-field {
+  border-bottom: 1px solid var(--p-surface-200);
+  padding-bottom: 0.75rem;
+}
+
 .text-danger {
   color: var(--p-red-500);
 }
+
+// ...existing code...
+
 
 .parapharmacy-row {
   flex-direction: row;

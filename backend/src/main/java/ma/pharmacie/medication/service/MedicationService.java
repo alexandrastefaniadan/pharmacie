@@ -9,6 +9,7 @@ import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
+import ma.pharmacie.common.enums.UsageType;
 import ma.pharmacie.common.exception.ConflictException;
 import ma.pharmacie.common.exception.NotFoundException;
 import ma.pharmacie.lookup.entity.AgeGroup;
@@ -115,30 +116,37 @@ public class MedicationService {
 
     private static MedicationFilter withoutForms(MedicationFilter f) {
         return new MedicationFilter(f.q(), null, f.ageGroupIds(),
-                f.therapeuticClassIds(), f.indicationIds(), f.parapharmacy(), f.dataSource());
+                f.therapeuticClassIds(), f.indicationIds(), f.parapharmacy(),
+                f.usageType(), f.dataSource());
     }
 
     private static MedicationFilter withoutAgeGroups(MedicationFilter f) {
         return new MedicationFilter(f.q(), f.formIds(), null,
-                f.therapeuticClassIds(), f.indicationIds(), f.parapharmacy(), f.dataSource());
+                f.therapeuticClassIds(), f.indicationIds(), f.parapharmacy(),
+                f.usageType(), f.dataSource());
     }
 
     private static MedicationFilter withoutTherapeuticClasses(MedicationFilter f) {
         return new MedicationFilter(f.q(), f.formIds(), f.ageGroupIds(),
-                null, f.indicationIds(), f.parapharmacy(), f.dataSource());
+                null, f.indicationIds(), f.parapharmacy(),
+                f.usageType(), f.dataSource());
     }
 
     private static MedicationFilter withoutIndications(MedicationFilter f) {
         return new MedicationFilter(f.q(), f.formIds(), f.ageGroupIds(),
-                f.therapeuticClassIds(), null, f.parapharmacy(), f.dataSource());
+                f.therapeuticClassIds(), null, f.parapharmacy(),
+                f.usageType(), f.dataSource());
     }
 
     // -------------------- commands --------------------
 
     public MedicationResponse create(MedicationCreateRequest req) {
         String name = req.name().trim();
-        if (medicationRepo.existsByNameIgnoreCase(name)) {
-            throw new ConflictException("A medication with name '" + name + "' already exists.");
+        UsageType usageType = req.usageType() == null ? UsageType.HUMAN : req.usageType();
+        if (medicationRepo.existsByNameIgnoreCaseAndUsageType(name, usageType)) {
+            throw new ConflictException(
+                    "A %s medication with name '%s' already exists."
+                            .formatted(usageType.name().toLowerCase(), name));
         }
         Medication m = Medication.builder()
                 .name(name)
@@ -146,6 +154,7 @@ public class MedicationService {
                 .dosage(trim(req.dosage()))
                 .description(req.description())
                 .parapharmacy(Boolean.TRUE.equals(req.parapharmacy()))
+                .usageType(usageType)
                 .priceTier(req.priceTier() == null ? 0 : req.priceTier())
                 .barcode(trim(req.barcode()))
                 .externalCip(trim(req.externalCip()))
@@ -169,8 +178,14 @@ public class MedicationService {
         }
 
         String newName = req.name().trim();
-        if (!newName.equalsIgnoreCase(m.getName()) && medicationRepo.existsByNameIgnoreCase(newName)) {
-            throw new ConflictException("A medication with name '" + newName + "' already exists.");
+        UsageType newUsageType = req.usageType() == null ? UsageType.HUMAN : req.usageType();
+        boolean nameOrTypeChanged = !newName.equalsIgnoreCase(m.getName())
+                || newUsageType != m.getUsageType();
+        if (nameOrTypeChanged
+                && medicationRepo.existsByNameIgnoreCaseAndUsageType(newName, newUsageType)) {
+            throw new ConflictException(
+                    "A %s medication with name '%s' already exists."
+                            .formatted(newUsageType.name().toLowerCase(), newName));
         }
 
         m.setName(newName);
@@ -178,6 +193,7 @@ public class MedicationService {
         m.setDosage(trim(req.dosage()));
         m.setDescription(req.description());
         m.setParapharmacy(Boolean.TRUE.equals(req.parapharmacy()));
+        m.setUsageType(newUsageType);
         m.setPriceTier(req.priceTier() == null ? 0 : req.priceTier());
         m.setBarcode(trim(req.barcode()));
         m.setExternalCip(trim(req.externalCip()));

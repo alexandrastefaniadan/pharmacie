@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import ma.pharmacie.common.enums.UsageType;
 
 import java.util.Set;
 
@@ -16,6 +17,9 @@ public record MedicationCreateRequest(
         @Size(max = 80) String dosage,
         String description,
         Boolean parapharmacy,
+        @Schema(description = "HUMAN (default) or VETERINARY. Null is treated as HUMAN.",
+                example = "HUMAN")
+        UsageType usageType,
         @Schema(description = "Manual visual price ranking (0..5). 0 = not rated.")
         @Min(0) @Max(5) Integer priceTier,
         Integer formId,
@@ -26,4 +30,6 @@ public record MedicationCreateRequest(
         @Size(max = 20) String externalCip
 ) {
 }
+
+
 

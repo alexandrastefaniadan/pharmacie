@@ -23,6 +23,7 @@ import { TextareaModule } from 'primeng/textarea';
 import { SelectModule } from 'primeng/select';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { CheckboxModule } from 'primeng/checkbox';
+import { SelectButtonModule } from 'primeng/selectbutton';
 import { MessageService } from 'primeng/api';
 
 import { LookupsApi } from '@core/api/lookups.api';
@@ -32,6 +33,7 @@ import {
   MedicationResponse,
   MedicationUpdateRequest,
 } from '@core/models/medication.model';
+import { UsageType } from '@core/models/usage-type.model';
 import { PriceTierComponent } from '@shared/price-tier/price-tier';
 
 /**
@@ -59,6 +61,7 @@ import { PriceTierComponent } from '@shared/price-tier/price-tier';
     SelectModule,
     MultiSelectModule,
     CheckboxModule,
+    SelectButtonModule,
     PriceTierComponent,
   ],
   templateUrl: './medication-form-dialog.html',
@@ -81,12 +84,19 @@ export class MedicationFormDialogComponent implements OnInit {
 
   protected readonly saving = signal(false);
 
+  /** Options for the usage-type segmented control. */
+  protected readonly usageTypeOptions = [
+    { label: 'Humain',      value: 'HUMAN' as UsageType },
+    { label: 'Vétérinaire', value: 'VETERINARY' as UsageType },
+  ];
+
   protected readonly form: FormGroup = this.fb.group({
     name: ['', [Validators.required, Validators.maxLength(255)]],
     inn: ['', Validators.maxLength(255)],
     dosage: ['', Validators.maxLength(80)],
     description: [''],
     parapharmacy: [false],
+    usageType: ['HUMAN' as UsageType],
     priceTier: [0],
     formId: [null as number | null],
     ageGroupIds: [[] as number[]],
@@ -104,6 +114,7 @@ export class MedicationFormDialogComponent implements OnInit {
         dosage: m.dosage ?? '',
         description: m.description ?? '',
         parapharmacy: m.parapharmacy,
+        usageType: m.usageType ?? 'HUMAN',
         priceTier: m.priceTier ?? 0,
         formId: m.form?.id ?? null,
         ageGroupIds: m.ageGroups.map((a) => a.id),
@@ -123,6 +134,7 @@ export class MedicationFormDialogComponent implements OnInit {
       dosage: raw.dosage?.trim() || null,
       description: raw.description?.trim() || null,
       parapharmacy: !!raw.parapharmacy,
+      usageType: (raw.usageType as UsageType) ?? 'HUMAN',
       priceTier: typeof raw.priceTier === 'number' ? raw.priceTier : 0,
       formId: raw.formId,
       ageGroupIds: raw.ageGroupIds ?? [],
@@ -151,7 +163,7 @@ export class MedicationFormDialogComponent implements OnInit {
         this.saved.emit(saved);
         this.close();
       },
-      error: () => this.saving.set(false), // toast shown by error interceptor
+      error: () => this.saving.set(false),
     });
   }
 

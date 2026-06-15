@@ -51,6 +51,9 @@
       <td>
         <div class="row-name">
           <span class="row-name-text">{{ m.name }}</span>
+          @if (m.usageType === 'VETERINARY') {
+            <p-tag value="Vét." severity="warn" styleClass="vet-badge" />
+          }
           @if (m.priceTier > 0) {
             <app-price-tier [value]="m.priceTier" />
           }

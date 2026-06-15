@@ -1,6 +1,7 @@
 package ma.pharmacie.medication.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import ma.pharmacie.common.enums.UsageType;
 import ma.pharmacie.lookup.dto.LookupDto;
 
 import java.time.Instant;
@@ -16,6 +17,8 @@ public record MedicationResponse(
         String dosage,
         String description,
         boolean parapharmacy,
+        @Schema(description = "HUMAN or VETERINARY.", example = "HUMAN")
+        UsageType usageType,
         @Schema(description = "Manual visual price ranking (0..5). 0 = not rated.", example = "3")
         int priceTier,
         LookupDto form,
@@ -30,4 +33,6 @@ public record MedicationResponse(
         long version
 ) {
 }
+
+
 

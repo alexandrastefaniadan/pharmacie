@@ -19,6 +19,26 @@ export const routes: Routes = [
     title: 'Médicaments',
   },
   {
+    path: 'treatments',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('@features/treatments/treatments-list/treatments-list').then(
+        (m) => m.TreatmentsListPage,
+      ),
+    data: { usageType: 'HUMAN' },
+    title: 'Traitements',
+  },
+  {
+    path: 'veterinary-treatments',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('@features/treatments/treatments-list/treatments-list').then(
+        (m) => m.TreatmentsListPage,
+      ),
+    data: { usageType: 'VETERINARY' },
+    title: 'Traitements vétérinaires',
+  },
+  {
     path: 'categories',
     canActivate: [authGuard],
     loadComponent: () =>
@@ -29,3 +49,5 @@ export const routes: Routes = [
   },
   { path: '**', redirectTo: 'medications' },
 ];
+
+

@@ -7,18 +7,10 @@
   margin-bottom: 1rem;
 }
 
-.usage-type-row {
-  display: flex;
-  align-items: center;
-  margin-bottom: 0.75rem;
-}
-
 .filter-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 0.75rem;
   align-items: center;
 }
-
-
 

@@ -1,6 +1,7 @@
 package ma.pharmacie.medication.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import ma.pharmacie.common.enums.UsageType;
 
 import java.util.Set;
 
@@ -20,13 +21,17 @@ public record MedicationFilter(
         Set<Integer> therapeuticClassIds,
         Set<Integer> indicationIds,
         Boolean parapharmacy,
+        @Schema(description = "Filter by usage type: HUMAN or VETERINARY. Null = both.")
+        UsageType usageType,
         @Schema(description = "Filter by origin: MANUAL | SOBRUS | DMP")
         String dataSource
 ) {
 
     /** Empty / null-safe accessor. */
     public static MedicationFilter empty() {
-        return new MedicationFilter(null, null, null, null, null, null, null);
+        return new MedicationFilter(null, null, null, null, null, null, null, null);
     }
 }
+
+
 

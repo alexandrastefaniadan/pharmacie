@@ -1,0 +1,101 @@
+<p-dialog
+  [(visible)]="visible"
+  [modal]="true"
+  [closable]="true"
+  [dismissableMask]="false"
+  [style]="{ width: 'min(680px, 95vw)' }"
+  [header]="treatment ? 'Modifier le traitement' : 'Nouveau traitement'"
+  (onHide)="onCancel()"
+>
+  <form [formGroup]="form" class="form-grid">
+
+    <div class="field full">
+      <label>Nom *</label>
+      <input pInputText type="text" formControlName="name" />
+      @if (form.get('name')?.touched && form.get('name')?.invalid) {
+        <small class="text-danger">Le nom est requis (255 caractères max).</small>
+      }
+    </div>
+
+    <div class="field full">
+      <label>Médicaments *</label>
+      <p-multiSelect
+        [options]="medicationOptions()"
+        optionLabel="name"
+        optionValue="id"
+        formControlName="medicationIds"
+        placeholder="Sélectionner les médicaments..."
+        [filter]="true"
+        filterPlaceholder="Rechercher..."
+        [showClear]="true"
+        [loading]="medsLoading()"
+        appendTo="body"
+        styleClass="w-full"
+        selectedItemsLabel="{0} médicament(s) sélectionné(s)"
+      >
+        <ng-template pTemplate="item" let-m>
+          <div class="med-option">
+            <span class="med-name">{{ m.name }}</span>
+            @if (m.form) {
+              <span class="med-form">{{ m.form.labelFr }}</span>
+            }
+            @if (m.dosage) {
+              <span class="med-dosage">{{ m.dosage }}</span>
+            }
+          </div>
+        </ng-template>
+      </p-multiSelect>
+      @if (form.get('medicationIds')?.touched && (form.get('medicationIds')?.value?.length ?? 0) === 0) {
+        <small class="text-danger">Au moins un médicament est requis.</small>
+      }
+    </div>
+
+    <div class="field full">
+      <label>Indications / symptômes</label>
+      <p-multiSelect
+        [options]="lookups.indications()"
+        optionLabel="labelFr"
+        optionValue="id"
+        formControlName="indicationIds"
+        placeholder="—"
+        [filter]="true"
+        [showClear]="true"
+        appendTo="body"
+        styleClass="w-full"
+      />
+    </div>
+
+    <div class="field full">
+      <label>Description</label>
+      <textarea
+        pTextarea
+        rows="3"
+        formControlName="description"
+        placeholder="Explication pour le client, conseils d'utilisation..."
+      ></textarea>
+    </div>
+
+    <div class="field full">
+      <label>Notes internes <span class="label-hint">(réservé au pharmacien)</span></label>
+      <textarea
+        pTextarea
+        rows="2"
+        formControlName="notes"
+        placeholder="Contre-indications, vérifications à faire..."
+      ></textarea>
+    </div>
+
+  </form>
+
+  <ng-template pTemplate="footer">
+    <p-button label="Annuler" severity="secondary" [text]="true" (onClick)="onCancel()" />
+    <p-button
+      [label]="treatment ? 'Enregistrer' : 'Créer'"
+      icon="pi pi-check"
+      [disabled]="form.invalid || saving() || (form.get('medicationIds')?.value?.length ?? 0) === 0"
+      [loading]="saving()"
+      (onClick)="save()"
+    />
+  </ng-template>
+</p-dialog>
+
